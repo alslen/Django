@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="{% static 'jquery-3.6.3.min.js'%}"></script>
+</head>
+<body>
+    <h3>LIST({{boardCount}})  // <a href="/write_form/">Insert</a></h3>
+    <table border="1">
+        <thead>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+            <th>첨부파일</th>
+            <th>파일이미지</th>
+            <th>다운로드</th>
+        </thead>
+        <tbody>
+            {%for board in boardList%}  
+            <tr>
+                <td>{{board.idx}}</td>  
+                <td><a href="/detail_idx?idx={{board.idx}}">{{board.title}}</a>
+                // <a href="/detail/{{board.idx}}">{{board.title}}</a>
+                </td>
+                <td>{{board.writer}}</td>
+                <td>{{board.post_date}}</td>
+                <td>{{board.hit}}</td>
+                <td>{{board.filename}}</td>
+                <td>
+                    {% if board.filesize > 0 %}
+                    <span class="_imgs" data-url="/download_count/?idx={{board.idx}}">
+                        <img src = "{% static 'images/file.png' %}"> 
+                    </span>
+                    {% endif%}
+                </td>>
+                <td class="downCnt">{{board.down}}</td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
+
+    <script>
+        $("._imgs").on('click', function(){
+            // 화살표함수를 사용하지 않으면 콜백되어서 success에 도달하면 this를 최상위함수를 가리킴.
+             // 그래서, this객체를 _imgs에 담아줌.
+            _imgs = $(this)
+            $.ajax({
+                url : $(this).attr('data-url'),   // $(this).data('url')로 사용해도 됨.
+                type : 'GET',
+                success:function(data){
+                    //alert(data.count)  // data에는 id와 count 두가지의 값이 저장되어있음.
+                    _imgs.parent().parent().find(".downCnt").text(data.count)  // _imgs는 img태그를 가르키고 부모의 부모를 찾으니까 td태그 -> 여기에서 downCnt를 찾음.
+                    location.href='/download?idx='+data.idx // 다운로드를 진짜 하기 위해서 
+                    
+                },
+            
+            })
+        })
+    </script>
+
+</body>
+</html>
