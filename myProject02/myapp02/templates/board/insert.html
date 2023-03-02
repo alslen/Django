@@ -1,0 +1,27 @@
+<!-- base.html을 상속받음. -->
+{% extends 'base.html'%}
+<!-- bast.html안에 선언되어있는 block content영역에 아래의 내용이 나오게 만들어줌. -->
+{% block content %}
+    <div class="container">
+        <h2>Insert</h2>
+        <form action="/insert/" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="writer">Writer:</label>
+            <input type="text" class="form-control" id="writer" placeholder="Enter Subject" name="writer">
+          </div>
+          <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" placeholder="Enter Title" name="title">
+          </div>
+          <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea class="form-control" rows="5" cols="50" id="content" name="content"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="file">File:</label>
+            <input type="file" class="form-control" id="file" placeholder="Enter file" name="file">
+          </div>
+          <button type="submit" class="btn btn-info">글쓰기</button>
+        </form>
+      </div>
+{% endblock %}

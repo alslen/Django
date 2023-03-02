@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <h3>회원가입</h3>
+    <!-- 부분적으로 넣고 싶을 때는 include를 사용 -->
+    <!-- error메시지를 signup.html에 출력하고 싶음. -->
+    <form method="post">
+        {% csrf_token %}
+        {% include "form_errors.html" %}
+        <div class="form-group">
+            <label for="username">사용자이름:</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{form.username.value | default_if_none:''}}">
+          </div>
+
+          <div class="form-group">
+            <label for="password1">비밀번호:</label>
+            <input type="password" class="form-control" id="password1" name="password1" value="{{form.password1.value | default_if_none:''}}">
+          </div>
+
+          <div class="form-group">
+            <label for="password2">비밀번호 확인:</label>
+            <input type="password" class="form-control" id="password2" name="password2" value="{{form.password2.value | default_if_none:''}}">
+          </div>
+
+          <div class="form-group">
+            <label for="email">이메일:</label>
+            <!-- email값이 있으면 value에 email값에 들어가고 그렇지 않으면 공백이 들어감.-->
+            <input type="text" class="form-control" id="email" name="email" value="{{form.email.value | default_if_none:''}}">
+          </div>
+
+          <button type="submit" class="btn btn-primary">회원가입</button> 
+    </form>
+
+</div>
+{% endblock %}

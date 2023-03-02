@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container">
+  <div class="d-flex justify-content-end mb-3">
+    <form method="get" name="frm" action="/list_page" class="form-inline mr-3">
+      <input class="form-control" type="text" placeholder="Search" id="word" name="word" value="{{word}}"/>
+      <button class="btn btn-info ml-1">Search</button>
+    </form>
+  </div>
+
+  <h2>BOARD({{boardCount}})</h2>    
+  <br>    
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>번호</th>
+        <th>작성자</th>
+        <th>제목</th>
+        <th>작성일</th>
+        <th>조회수</th>
+        <th>첨부파일</th>
+        <th>파일이미지</th>
+        <th>다운로드</th>
+      </tr>
+    </thead>
+    <tbody>
+     {% for board in page_list%}
+        <tr>
+            <td>{{board.id}}</td>
+            <td>{{board.writer}}</td>
+            <td><a href="/detail/{{board.id}}">{{board.title}}</a></td>
+            <td>{{board.post_date|date:"Y-m-d"}}</td>
+            <td>{{board.hit}}</td>
+            <td>{{board.title}}</td>
+            <td>
+            {% if board.filesize > 0%}
+            <span class="_imgs" data-url="/download_count?id={{board.id}}">
+              <img src="{% static 'images/file.png'%}">
+          </span>
+            {% endif %}  
+          </td>   
+            <td class="downCnt">{{board.down}}</td>
+        </tr>
+     {% endfor %}
+    </tbody>
+  </table>
+  <br>
+
+  <!-- 페이지 -->
+  <ul class="pagination">
+    <!-- 이전 -->
+    {% if page_list.has_previous %} 
+      <li class="page-item"><a class="page-link" href="?page={{page_list.previous_page_number}}&word={{word}}">Previous</a></li> 
+    {% endif %}
+    <!-- 다음 -->
+    {% if page_list.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{page_list.next_page_number}}&word={{word}}">Next</a></li>
+    {% endif %}
+
+  </ul>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+  $("._imgs").on('click', function(){
+      _imgs = $(this)
+      $.ajax({
+          url : $(this).attr('data-url'), 
+          type : 'GET',
+          success:function(data){
+              alert(data.count) 
+              _imgs.parent().parent().find(".downCnt").text(data.count) 
+              location.href='/download?id='+data.id
+              
+          },
+      })
+  })
+</script>
+{% endblock %}
